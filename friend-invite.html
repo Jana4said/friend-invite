@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Friendship Invitation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #ffccd5, #ffafcc);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            background-color: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            padding: 30px;
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            animation: bounce 5s infinite;
+        }
+
+        h1 {
+            color: #ff6b9d;
+            margin-bottom: 20px;
+            font-size: 28px;
+            transition: all 0.3s ease;
+        }
+
+        .cat-container {
+            position: relative;
+            height: 220px;
+            margin: 20px 0;
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+        }
+
+        .cat {
+            width: 150px;
+            height: 130px;
+            background-color: #b0b0b0;
+            border-radius: 50% 50% 40% 40%;
+            position: relative;
+            transition: all 0.5s ease;
+        }
+
+        .cat::before, .cat::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 0;
+            border-left: 15px solid transparent;
+            border-right: 15px solid transparent;
+            border-bottom: 25px solid #b0b0b0;
+            top: -20px;
+        }
+
+        .cat::before { left: 25px; transform: rotate(-20deg); }
+        .cat::after { right: 25px; transform: rotate(20deg); }
+
+        .cat-face { position: absolute; width: 100%; height: 100%; top: 0; left: 0; }
+
+        .eyes {
+            display: flex;
+            justify-content: space-around;
+            padding-top: 40px;
+        }
+
+        .eye {
+            width: 25px;
+            height: 35px;
+            background-color: #333;
+            border-radius: 50%;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .eye::before {
+            content: '';
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            background-color: white;
+            border-radius: 50%;
+            top: 8px;
+            left: 6px;
+        }
+
+        .nose {
+            width: 20px;
+            height: 12px;
+            background-color: #ff6b9d;
+            border-radius: 50%;
+            margin: 8px auto;
+        }
+
+        .mouth {
+            width: 30px;
+            height: 15px;
+            border-bottom: 3px solid #333;
+            border-radius: 0 0 50% 50%;
+            margin: 0 auto;
+            transition: all 0.3s ease;
+        }
+
+        .sad .mouth {
+            transform: rotate(180deg);
+            border-bottom: 3px solid #ff6b9d;
+            width: 35px;
+        }
+
+        .very-sad .mouth {
+            width: 40px;
+            height: 20px;
+            border-bottom: 3px solid #ff6b9d;
+            border-radius: 0 0 50% 50%;
+        }
+
+        .happy .mouth {
+            width: 40px;
+            height: 20px;
+            border-bottom: 3px solid #333;
+            border-radius: 0 0 50% 50%;
+        }
+
+        .flowers {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 1s;
+        }
+
+        .flower {
+            position: absolute;
+            font-size: 30px;
+            animation: float 3s linear infinite;
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            padding: 12px 25px;
+            font-size: 18px;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: bold;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .yes-btn {
+            background-color: #a8e6cf;
+            color: #333;
+        }
+
+        .yes-btn:hover {
+            background-color: #8dd3b6;
+            transform: translateY(-3px);
+        }
+
+        .no-btn {
+            background-color: #ff8b94;
+            color: white;
+        }
+
+        .no-btn:hover {
+            background-color: #ff6b7a;
+            transform: translateY(-3px);
+        }
+
+        .moving { position: absolute; transition: all 0.2s; }
+        .shaking { animation: shake 0.5s ease infinite; }
+
+        .final-text {
+            font-size: 24px;
+            color: #ff6b9d;
+            margin-top: 20px;
+            opacity: 0;
+            transition: opacity 1s;
+            font-weight: bold;
+        }
+
+        .paw-prints {
+            position: absolute;
+            width: 100%; height: 100%;
+            top: 0; left: 0;
+            pointer-events: none;
+            opacity: 0.1;
+        }
+
+        .paw { position: absolute; font-size: 20px; }
+
+        @keyframes jump {
+            0%,100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        @keyframes shake {
+            0%,100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            50% { transform: translateX(5px); }
+            75% { transform: translateX(-5px); }
+        }
+
+        @keyframes float {
+            0% { transform: translateY(100px) rotate(0deg); opacity: 0; }
+            10%,90% { opacity: 1; }
+            100% { transform: translateY(-100px) rotate(360deg); opacity: 0; }
+        }
+
+        @keyframes bounce {
+            0%,100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="paw-prints" id="pawPrints"></div>
+        <h1 id="question">Do You Want To Be My Friend?</h1>
+
+        <div class="cat-container">
+            <div class="cat">
+                <div class="cat-face">
+                    <div class="eyes">
+                        <div class="eye"></div>
+                        <div class="eye"></div>
+                    </div>
+                    <div class="nose"></div>
+                    <div class="mouth"></div>
+                </div>
+            </div>
+            <div class="flowers" id="flowers"></div>
+        </div>
+
+        <div class="buttons" id="buttons">
+            <button class="yes-btn" id="sureBtn">Sure!</button>
+            <button class="no-btn" id="noBtn">No</button>
+        </div>
+
+        <div class="final-text" id="finalText"></div>
+    </div>
+
+    <script>
+        const questionEl = document.getElementById('question');
+        const catEl = document.querySelector('.cat');
+        const buttonsContainer = document.getElementById('buttons');
+        const flowersEl = document.getElementById('flowers');
+        const finalTextEl = document.getElementById('finalText');
+        const pawPrintsEl = document.getElementById('pawPrints');
+        let stage = 1;
+
+        function createPawPrints() {
+            for (let i = 0; i < 15; i++) {
+                const paw = document.createElement('div');
+                paw.classList.add('paw');
+                paw.innerHTML = '🐾';
+                paw.style.left = `${Math.random() * 100}%`;
+                paw.style.top = `${Math.random() * 100}%`;
+                paw.style.fontSize = `${Math.random() * 15 + 10}px`;
+                paw.style.transform = `rotate(${Math.random() * 360}deg)`;
+                pawPrintsEl.appendChild(paw);
+            }
+        }
+
+        document.getElementById('sureBtn').addEventListener('click', handleYes);
+        document.getElementById('noBtn').addEventListener('click', handleNo);
+        createPawPrints();
+
+        function handleYes() {
+            showSuccess();
+        }
+
+        function handleNo() {
+            if (stage === 1) {
+                stage = 2;
+                questionEl.textContent = "WHYYYY I'm so nice :(";
+                catEl.classList.add('sad');
+                buttonsContainer.innerHTML = `
+                    <button class="yes-btn" id="tryBtn">Give It A Try</button>
+                    <button class="no-btn" id="weirdBtn">No, You're Weird</button>
+                `;
+                document.getElementById('tryBtn').addEventListener('click', handleYes);
+                document.getElementById('weirdBtn').addEventListener('click', handleWeird);
+            }
+        }
+
+        function handleWeird() {
+            if (stage === 2) {
+                stage = 3;
+                questionEl.textContent = "No I'm not, trust me!!";
+                catEl.classList.remove('sad');
+                catEl.classList.add('very-sad');
+                buttonsContainer.innerHTML = `
+                    <button class="yes-btn shaking" id="fineBtn">Fine</button>
+                    <button class="no-btn" id="noThanksBtn">No, thanks</button>
+                `;
+                document.getElementById('fineBtn').addEventListener('click', handleYes);
+                const noThanksBtn = document.getElementById('noThanksBtn');
+                noThanksBtn.addEventListener('mouseover', moveButton);
+                noThanksBtn.addEventListener('touchstart', moveButton);
+            }
+        }
+
+        function moveButton() {
+            const button = document.getElementById('noThanksBtn');
+            const container = document.querySelector('.container');
+            const containerRect = container.getBoundingClientRect();
+
+            if (!button.classList.contains('moved')) {
+                button.classList.add('moved');
+                button.style.position = 'absolute';
+            }
+
+            const maxX = containerRect.width - button.offsetWidth - 20;
+            const maxY = containerRect.height - button.offsetHeight - 20;
+            const randomX = Math.floor(Math.random() * maxX);
+            const randomY = Math.floor(Math.random() * maxY);
+
+            button.style.left = `${randomX}px`;
+            button.style.top = `${randomY}px`;
+        }
+
+        function showSuccess() {
+            questionEl.textContent = "YAYYYY MWAHHH";
+            catEl.classList.remove('sad', 'very-sad');
+            catEl.classList.add('happy');
+            catEl.style.animation = 'jump 0.5s ease infinite';
+            showFlowers();
+            finalTextEl.textContent = "Text me: 613-462-3121 ;)";
+            finalTextEl.style.opacity = "1";
+            buttonsContainer.innerHTML = '';
+            document.body.style.background = "linear-gradient(135deg, #a8e6cf, #dcedc1)";
+        }
+
+        function showFlowers() {
+            for (let i = 0; i < 20; i++) {
+                const flower = document.createElement('div');
+                flower.classList.add('flower');
+                flower.innerHTML = '🌸';
+                flower.style.left = `${Math.random() * 100}%`;
+                flower.style.animationDelay = `${Math.random() * 3}s`;
+                flowersEl.appendChild(flower);
+            }
+            flowersEl.style.opacity = "1";
+        }
+    </script>
+</body>
+</html>
